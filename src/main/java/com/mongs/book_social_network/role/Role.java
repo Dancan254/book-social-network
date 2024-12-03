@@ -11,12 +11,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 @Builder
+@Entity
 public class Role {
     @Id
     @GeneratedValue
