@@ -1,7 +1,7 @@
 services:
   postgres:
     container_name: postgres-bsn
-    image: postgres:15
+    image: postgres
     environment:
       POSTGRES_DB: book_social_network
       POSTGRES_USER: username
