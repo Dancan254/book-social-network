@@ -7,12 +7,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: false
+    show-sql: true
     properties:
       hibernate:
-        format_sql: true
-    database: postgresql
-    database-platform: org.hibernate.dialect.
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
   mail:
     host: localhost
     port: 1025
@@ -33,3 +32,9 @@ application:
     jwt:
       secret-key: d4f8e2b9a8c4e3f1b2d4a8c9e3f1b2d4e8c9a4b2d4e3f1b2d4a8c9e3f1b2d4
       expiration: 86400000
+  mailing:
+    frontend:
+    activationUrl: http://localhost:5000/activate-account
+
+server:
+  port: 8088
