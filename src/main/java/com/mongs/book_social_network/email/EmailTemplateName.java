@@ -4,9 +4,13 @@ public enum EmailTemplateName {
 
     ACTIVATEACCOUNT("activate-account");
 
-    private final String name;
+    private final String templateName;
     EmailTemplateName(String templateName) {
-        name = templateName;
+        this.templateName = templateName;
+    }
+
+    public String getTemplateName() {
+        return templateName;
     }
 
 }
