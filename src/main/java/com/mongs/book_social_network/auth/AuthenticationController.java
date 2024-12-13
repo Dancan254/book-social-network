@@ -18,7 +18,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Tag(name = "Authentication", description = "Authentication API")
 public class AuthenticationController {
-    private AuthenticationService service;
+    
+    private final AuthenticationService service;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.ACCEPTED) 
