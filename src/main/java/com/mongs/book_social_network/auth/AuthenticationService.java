@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
@@ -113,6 +116,9 @@ public class AuthenticationService {
             String userEmail = user.getEmail();
             throw new RuntimeException("Activation token expired. A new token was sent to " + userEmail + " email adress.");
         }
+        if(savedToken.getValidatedAt() != null){
+            throw new RuntimeException("Token already validated");
+        }
 
         //fetch and enable the user
         User user = userRepository.findById(savedToken.getUser().getId())
@@ -123,5 +129,6 @@ public class AuthenticationService {
         savedToken.setValidatedAt(LocalDateTime.now());
         tokenRepository.save(savedToken);
         
+        logger.info("User {} has been activated", user.getEmail());
     }
 }
