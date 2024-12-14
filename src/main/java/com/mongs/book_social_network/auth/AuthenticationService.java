@@ -10,9 +10,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mongs.book_social_network.email.EmailService;
 import com.mongs.book_social_network.email.EmailTemplateName;
+import com.mongs.book_social_network.exceptions.TokenNotFoundException;
 import com.mongs.book_social_network.role.RoleRepository;
 import com.mongs.book_social_network.security.JwtService;
 import com.mongs.book_social_network.user.Token;
@@ -96,5 +98,30 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
             .token(jwtToken)
             .build();
+    }
+
+    @Transactional
+    public void activateAccount(String token) throws MessagingException {
+        //get the token
+        Token savedToken = tokenRepository.findByToken(token)
+            .orElseThrow(() -> new TokenNotFoundException("Token not found"));
+        //check if the token is expired
+        if (savedToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+            //send another token
+            User user = savedToken.getUser();
+            sendValidationEmail(user);
+            String userEmail = user.getEmail();
+            throw new RuntimeException("Activation token expired. A new token was sent to " + userEmail + " email adress.");
+        }
+
+        //fetch and enable the user
+        User user = userRepository.findById(savedToken.getUser().getId())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setEnabled(true);
+        userRepository.save(user);
+        //update the token
+        savedToken.setValidatedAt(LocalDateTime.now());
+        tokenRepository.save(savedToken);
+        
     }
 }
