@@ -2,44 +2,40 @@ package com.mongs.book_social_network.auth;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mongs.book_social_network.email.EmailService;
 import com.mongs.book_social_network.email.EmailTemplateName;
 import com.mongs.book_social_network.role.RoleRepository;
+import com.mongs.book_social_network.security.JwtService;
 import com.mongs.book_social_network.user.Token;
 import com.mongs.book_social_network.user.TokenRepository;
 import com.mongs.book_social_network.user.User;
 import com.mongs.book_social_network.user.UserRepository;
 
 import jakarta.mail.MessagingException;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final EmailService emailService;
     private final RoleRepository roleRepository;
+    @Value("${application.mailing.activationUrl}")
     private final String activationUrl;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-    public AuthenticationService(
-            PasswordEncoder passwordEncoder,
-            UserRepository userRepository,
-            TokenRepository tokenRepository,
-            EmailService emailService, RoleRepository roleRepository,
-            @Value("${application.mailing.activationUrl}") String activationUrl) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.tokenRepository = tokenRepository;
-        this.emailService = emailService;
-        this.roleRepository = roleRepository;
-        this.activationUrl = activationUrl;
-    }
 
     public void register(RegistrationRequest request) throws MessagingException {
         var role = roleRepository.findByName("USER").orElseThrow(() -> new RuntimeException("Role not found"));
@@ -86,5 +82,19 @@ public class AuthenticationService {
             codeBuilder.append(characters.charAt(randomIndex));
         }
         return codeBuilder.toString();
+    }
+
+    public AuthenticationResponse login(LoginRequest request) {
+        var auth = authenticationManager
+            .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        
+        var claims = new HashMap<String, Object>();
+        var user = (User) auth.getPrincipal();
+        claims.put("fullname", user.fullName());
+        var jwtToken = jwtService.generateToken(claims, user);
+
+        return AuthenticationResponse.builder()
+            .token(jwtToken)
+            .build();
     }
 }
