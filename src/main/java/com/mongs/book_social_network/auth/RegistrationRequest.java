@@ -11,7 +11,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
 @RequiredArgsConstructor
 public class RegistrationRequest {
     @NotEmpty(message = "firstname is required")
