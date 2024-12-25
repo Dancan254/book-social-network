@@ -1,19 +1,5 @@
 package com.mongs.book_social_network.auth;
 
-import java.security.SecureRandom;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.mongs.book_social_network.email.EmailService;
 import com.mongs.book_social_network.email.EmailTemplateName;
 import com.mongs.book_social_network.exceptions.TokenNotFoundException;
@@ -23,9 +9,21 @@ import com.mongs.book_social_network.user.Token;
 import com.mongs.book_social_network.user.TokenRepository;
 import com.mongs.book_social_network.user.User;
 import com.mongs.book_social_network.user.UserRepository;
-
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +35,7 @@ public class AuthenticationService {
     private final EmailService emailService;
     private final RoleRepository roleRepository;
     @Value("${application.mailing.activationUrl}")
-    private final String activationUrl;
+    private String activationUrl;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
