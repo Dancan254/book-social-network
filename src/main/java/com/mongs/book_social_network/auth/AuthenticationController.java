@@ -38,6 +38,5 @@ public class AuthenticationController {
     @GetMapping("/activate-account")
     public void activateAccount(@RequestParam String token) throws MessagingException {
         service.activateAccount(token);
-        
     }
 }
