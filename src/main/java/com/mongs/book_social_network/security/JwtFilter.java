@@ -22,6 +22,10 @@ public class JwtFilter extends OncePerRequestFilter{
     private JwtService jwtService;
     private UserDetailsServiceImpl userDetailsService;
 
+    public JwtFilter(JwtService jwtService, UserDetailsServiceImpl userDetailsService) {
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+    }
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
