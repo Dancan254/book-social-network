@@ -1,5 +1,7 @@
 package com.mongs.book_social_network.user;
 
+import com.mongs.book_social_network.book.Book;
+import com.mongs.book_social_network.history.BookTransactionHistory;
 import com.mongs.book_social_network.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -45,6 +47,8 @@ public class User implements UserDetails, Principal {
     )
     private List<Role> roles;
 
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
     @CreatedDate
     @Column(updatable = false, nullable = false)
     private LocalDate createdDate;
@@ -52,6 +56,8 @@ public class User implements UserDetails, Principal {
     @Column(insertable = false)
     private LocalDate lastModifiedDate;
 
+    @OneToMany(mappedBy = "user")
+    private List<BookTransactionHistory> bookTransactionHistories;
     @Override
     public String getName() {
         return email;
