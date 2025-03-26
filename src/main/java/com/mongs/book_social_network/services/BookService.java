@@ -2,7 +2,9 @@ package com.mongs.book_social_network.services;
 
 import com.mongs.book_social_network.book.*;
 import com.mongs.book_social_network.config.BookMapper;
+import com.mongs.book_social_network.history.BookTransactionHistory;
 import com.mongs.book_social_network.repository.BookRepository;
+import com.mongs.book_social_network.repository.BookTransactionHistoryRepository;
 import com.mongs.book_social_network.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ public class BookService {
 
     private final BookMapper bookMapper;
     private final BookRepository bookRepository;
+    private final BookTransactionHistoryRepository bookTransactionHistoryRepository;
 
     public Integer saveBook(BookRequest request, Authentication authenticatedUser) {
         User user = (User) authenticatedUser.getPrincipal();
@@ -65,6 +68,25 @@ public class BookService {
                 books.getTotalPages(),
                 books.isFirst(),
                 books.isLast()
+        );
+    }
+
+    public PageResponse<BorrowedBookResponse> findAllBorrowedBooks(int page, int size, Authentication authenticatedUser) {
+        User user = (User) authenticatedUser.getPrincipal();
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<BookTransactionHistory> bookTransactionHistories = bookTransactionHistoryRepository.findAllBorrowedBooks(user.getId(), pageable);
+        List<BorrowedBookResponse> borrowedBookResponses = bookTransactionHistories.stream()
+                .map(bookMapper::toBorrowedBookResponse)
+                .toList();
+
+        return new PageResponse<>(
+                borrowedBookResponses,
+                bookTransactionHistories.getNumber(),
+                bookTransactionHistories.getSize(),
+                (int)bookTransactionHistories.getTotalElements(),
+                bookTransactionHistories.getTotalPages(),
+                bookTransactionHistories.isFirst(),
+                bookTransactionHistories.isLast()
         );
     }
 }
