@@ -2,6 +2,7 @@ package com.mongs.book_social_network.controller;
 
 import com.mongs.book_social_network.book.BookRequest;
 import com.mongs.book_social_network.book.BookResponse;
+import com.mongs.book_social_network.book.BorrowedBookResponse;
 import com.mongs.book_social_network.book.PageResponse;
 import com.mongs.book_social_network.services.BookService;
 import jakarta.validation.Valid;
@@ -40,4 +41,11 @@ public class BookController {
                                                                    Authentication authenticatedUser) {
         return ResponseEntity.ok(service.findAllBooksByOwner(page, size, authenticatedUser));
     }
+    @GetMapping("/borrowed")
+    public ResponseEntity<PageResponse<BorrowedBookResponse>> findAllBorrowedBooks(@RequestParam(defaultValue = "0") int page,
+                                                                                   @RequestParam(defaultValue = "10") int size,
+                                                                                   Authentication authenticatedUser) {
+        return ResponseEntity.ok(service.findAllBorrowedBooks(page, size, authenticatedUser));
+    }
+
 }
