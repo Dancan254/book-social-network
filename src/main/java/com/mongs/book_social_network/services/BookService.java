@@ -2,10 +2,12 @@ package com.mongs.book_social_network.services;
 
 import com.mongs.book_social_network.book.*;
 import com.mongs.book_social_network.config.BookMapper;
+import com.mongs.book_social_network.exceptions.OperationNotPermitted;
 import com.mongs.book_social_network.history.BookTransactionHistory;
 import com.mongs.book_social_network.repository.BookRepository;
 import com.mongs.book_social_network.repository.BookTransactionHistoryRepository;
 import com.mongs.book_social_network.user.User;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -110,4 +112,15 @@ public class BookService {
     }
 
 
+    public Integer updateShareableStatus(Integer bookId, Authentication authenticatedUser) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book not found"));
+        User user = (User) authenticatedUser.getPrincipal();
+        if (!book.getOwner().getId().equals(user.getId())) {
+            throw new OperationNotPermitted("You are not the owner of this book");
+        }
+        book.setShareable(!book.isShareable());
+        bookRepository.save(book);
+        return book.getId();
+    }
 }
