@@ -119,7 +119,7 @@ public class AuthenticationService {
         }
 
         //fetch and enable the user
-        User user = userRepository.findById(savedToken.getUser().getId())
+        User user = userRepository.findById(Long.valueOf(savedToken.getUser().getId()))
             .orElseThrow(() -> new RuntimeException("User not found"));
         user.setEnabled(true);
         userRepository.save(user);
