@@ -11,7 +11,7 @@ import com.mongs.book_social_network.role.Role;
 import com.mongs.book_social_network.role.RoleRepository;
 
 @SpringBootApplication
-@EnableJpaAuditing
+@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableAsync
 public class BookSocialNetworkApplication {
 
