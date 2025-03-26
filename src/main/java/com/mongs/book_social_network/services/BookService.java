@@ -1,9 +1,6 @@
 package com.mongs.book_social_network.services;
 
-import com.mongs.book_social_network.book.Book;
-import com.mongs.book_social_network.book.BookRequest;
-import com.mongs.book_social_network.book.BookResponse;
-import com.mongs.book_social_network.book.PageResponse;
+import com.mongs.book_social_network.book.*;
 import com.mongs.book_social_network.config.BookMapper;
 import com.mongs.book_social_network.repository.BookRepository;
 import com.mongs.book_social_network.user.User;
@@ -42,6 +39,23 @@ public class BookService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Book> books = bookRepository.findAllDisplayableBooks(pageable, user.getId());
+        List<BookResponse> bookResponses = books.stream().map(bookMapper::toBookResponse).toList();
+        return new PageResponse<>(
+                bookResponses,
+                books.getNumber(),
+                books.getSize(),
+                (int)books.getTotalElements(),
+                books.getTotalPages(),
+                books.isFirst(),
+                books.isLast()
+        );
+    }
+
+    public PageResponse<BookResponse> findAllBooksByOwner(int page, int size, Authentication authenticatedUser) {
+        User user = (User) authenticatedUser.getPrincipal();
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Book> books = bookRepository.findAll(BookSpecification.withOwnerId(user.getId()), pageable);
         List<BookResponse> bookResponses = books.stream().map(bookMapper::toBookResponse).toList();
         return new PageResponse<>(
                 bookResponses,
