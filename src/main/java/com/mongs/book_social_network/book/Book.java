@@ -36,4 +36,16 @@ public class Book extends BaseEntity {
     private List<Feedback> feedbacks;
     @OneToMany(mappedBy = "book")
     private List<BookTransactionHistory> transactionHistories;
+
+    @Transient
+    public double getRate(){
+        if (feedbacks != null && !feedbacks.isEmpty()){
+            var rate =  this.feedbacks.stream()
+                    .mapToDouble(Feedback::getScore)
+                    .average()
+                    .orElse(0);
+            return Math.round(rate * 100) / 100.0;
+        }
+        return 0.0;
+    }
 }
