@@ -41,7 +41,7 @@ public class Book extends BaseEntity {
     public double getRate(){
         if (feedbacks != null && !feedbacks.isEmpty()){
             var rate =  this.feedbacks.stream()
-                    .mapToDouble(Feedback::getScore)
+                    .mapToDouble(Feedback::getRate)
                     .average()
                     .orElse(0);
             return Math.round(rate * 100) / 100.0;
