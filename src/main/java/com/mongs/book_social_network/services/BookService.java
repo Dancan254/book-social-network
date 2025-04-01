@@ -1,8 +1,9 @@
 package com.mongs.book_social_network.services;
 
 import com.mongs.book_social_network.book.*;
-import com.mongs.book_social_network.config.BookMapper;
+import com.mongs.book_social_network.book.BookMapper;
 import com.mongs.book_social_network.exceptions.OperationNotPermitted;
+import com.mongs.book_social_network.file.FileStorageService;
 import com.mongs.book_social_network.history.BookTransactionHistory;
 import com.mongs.book_social_network.repository.BookRepository;
 import com.mongs.book_social_network.repository.BookTransactionHistoryRepository;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class BookService {
     private final BookMapper bookMapper;
     private final BookRepository bookRepository;
     private final BookTransactionHistoryRepository bookTransactionHistoryRepository;
+    private final FileStorageService fileStorageService;
 
     public Integer saveBook(BookRequest request, Authentication authenticatedUser) {
         User user = (User) authenticatedUser.getPrincipal();
@@ -193,5 +196,15 @@ public class BookService {
         bookTransactionHistory.setReturnApproved(true);
         bookTransactionHistoryRepository.save(bookTransactionHistory);
         return book.getId();
+    }
+
+    public void uploadCoverPicture(Integer bookId, MultipartFile file, Authentication authenticatedUser) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book not found"));
+        if (!book.isShareable() || book.isArchived()) {
+            throw new OperationNotPermitted("This book is not shareable or is archived");
+        }
+        User user = (User) authenticatedUser.getPrincipal();
+        var bookCover = fileStorageService.saveFile(file, book, user.getId());
     }
 }
