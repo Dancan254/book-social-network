@@ -33,9 +33,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/auth/**",
-                                        "/v2/api-docs",
+                                        "/v2/api-docs/**",
                                         "/v3/api-docs",
                                         "/v3/api-docs/**",
+                                        "/api/v1/v3/api-docs",
+                                        "/api/v1/v3/api-docs/**",
                                         "/swagger-resources",
                                         "/swagger-resources/**",
                                         "/configuration/ui",
@@ -43,7 +45,7 @@ public class SecurityConfig {
                                         "/swagger-ui/**",
                                         "/webjars/**",
                                         "/h2-console/**",
-                                        "/swagger-ui.html")
+                                        "/swagger-ui.html/**")
                                 .permitAll()
                                 .anyRequest().authenticated()
                 ).sessionManagement(sessionManagement -> sessionManagement
