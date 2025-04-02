@@ -1,7 +1,5 @@
-package com.mongs.book_social_network.services;
+package com.mongs.book_social_network.book;
 
-import com.mongs.book_social_network.book.*;
-import com.mongs.book_social_network.book.BookMapper;
 import com.mongs.book_social_network.exceptions.OperationNotPermitted;
 import com.mongs.book_social_network.file.FileStorageService;
 import com.mongs.book_social_network.history.BookTransactionHistory;
