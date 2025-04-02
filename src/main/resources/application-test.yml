@@ -1,0 +1,45 @@
+spring:
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:bsn
+    username: sa
+    password: pass
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  mail:
+    host: localhost
+    port: 1025
+    username: username
+    password: password
+    properties:
+      mail:
+        smtp:
+          trust: "*"
+        auth: true
+        starttls:
+          enable: true
+        connectiontimeout: 5000
+        timeout: 3000
+        writetimeout: 5000
+
+application:
+  security:
+    jwt:
+      secret-key: d4f8e2b9a8c4e3f1b2d4a8c9e3f1b2d4e8c9a4b2d4e3f1b2d4a8c9e3f1b2d4
+      expiration: 86400000
+  mailing:
+    frontend:
+    activationUrl: http://localhost:5000/activate-account
+  upload:
+    photos-output-path: /uploads
+server:
+  port: 8088
