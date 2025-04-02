@@ -112,7 +112,6 @@ src/main/java/com/mongs/book_social_network/
 ├── repository/    # Data access layer
 ├── role/          # Role management
 ├── security/      # Security configuration
-├── services/      # Business logic
 └── user/          # User management
 ```
 
