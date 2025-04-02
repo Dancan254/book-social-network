@@ -1,7 +1,7 @@
 package com.mongs.book_social_network.book;
 
-import com.mongs.book_social_network.services.BookService;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/book")
 @RequiredArgsConstructor
+@Tag(name = "Book", description = "Book API")
 public class BookController {
 
     private final BookService service;
