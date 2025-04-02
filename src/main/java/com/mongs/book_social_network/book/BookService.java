@@ -27,11 +27,12 @@ public class BookService {
     private final BookTransactionHistoryRepository bookTransactionHistoryRepository;
     private final FileStorageService fileStorageService;
 
-    public Integer saveBook(BookRequest request, Authentication authenticatedUser) {
+    public String saveBook(BookRequest request, Authentication authenticatedUser) {
         User user = (User) authenticatedUser.getPrincipal();
         Book book = bookMapper.toBook(request);
         book.setOwner(user);
-        return bookRepository.save(book).getId();
+        bookRepository.save(book);
+        return "Book Saved Successfully";
     }
 
     public BookResponse findById(Integer bookId) {
