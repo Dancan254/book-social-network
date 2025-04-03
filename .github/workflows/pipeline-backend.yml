@@ -3,7 +3,7 @@ name: BSN Backend API CI/CD Pipeline
 on:
   push:
     branches:
-      - ci/pipeline
+      - main
     paths:
       - book-social-network/**
       - 'docker-compose.yml'
