@@ -19,7 +19,9 @@ COPY --from=build /build/target/book-social-network-*.jar /app/app.jar
 EXPOSE 8088
 
 ENV DB_URL=jdbc:postgresql://postgres:5432/book-social-network
-ENV ACTIVE_PROFILE=${PROFILE}
+ENV ACTIVE_PROFILE=dev
+ENV DB_USERNAME=username
+ENV DB_PASSWORD=password
 ENV JAR_VERSION=${APP_VERSION}
 ENV EMAIL_HOSTNAME=missing-email-hostname
 ENV EMAIL_USERNAME=missing-email-username
@@ -30,4 +32,4 @@ ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.s
 RUN chmod +x /wait-for-it.sh
 
 # Use specific JAR name that matches what was copied
-CMD java -jar /app/app.jar -Dspring.profiles.active=${ACTIVE_PROFILE} -Dspring.datasource.url=${DB_URL} -Dspring.datasource.username=${DB_USERNAME} -Dspring.datasource.password=${DB_PASSWORD} --email.hostname=${EMAIL_HOSTNAME} --email.username=${EMAIL_USERNAME} --email.password=${EMAIL_PASSWORD}
+CMD java -Dspring.profiles.active=${ACTIVE_PROFILE} -Dspring.datasource.url=${DB_URL} -Dspring.datasource.username=${DB_USERNAME} -Dspring.datasource.password=${DB_PASSWORD} -jar /app/app.jar
