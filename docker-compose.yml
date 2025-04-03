@@ -30,7 +30,7 @@ services:
     networks:
       - spring-demo
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "1025"]
+      test: ["CMD", "nc", "-zv", "localhost", "1025"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -42,13 +42,13 @@ services:
       context: .
       dockerfile: Dockerfile
     image: bsn/bsn:1.0.0
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/book-social-network
-      - SPRING_DATASOURCE_USERNAME=username
-      - SPRING_DATASOURCE_PASSWORD=password
     ports:
       - "8088:8088"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mail-dev:
+        condition: service_healthy
     networks:
       - spring-demo
     restart: unless-stopped
