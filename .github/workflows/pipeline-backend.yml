@@ -27,13 +27,11 @@ jobs:
 
       - name: Build with Maven
         run: |
-          cd book-social-network
           ./mvnw clean package -DskipTests
 
       - name: Extract project version
         id: extract_version
         run: |
-          cd book-social-network
           echo "VERSION=$(./mvnw -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_OUTPUT
 
       - name: Login to DockerHub
