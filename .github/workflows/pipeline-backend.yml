@@ -5,9 +5,9 @@ on:
     branches:
       - main
     paths:
-      - book-social-network/**
+      - '**'
       - 'docker-compose.yml'
-      - .github/workflows/pipeline-backend.yml
+      - '.github/workflows/pipeline-backend.yml'
       - '**/Dockerfile'
 
 jobs:
