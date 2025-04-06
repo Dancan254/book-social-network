@@ -57,19 +57,10 @@ jobs:
     needs: build-and-push-image
 
     steps:
-      - name: Create deployment folder
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "mkdir -p ci-cd"
-
-      - name: Copy docker-compose file
-        run: scp -o StrictHostKeyChecking=no -i ${{ secrets.SSH_KEY }} docker-compose.yml ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:ci-cd/docker-compose.yml
-
-      - name: Set environment variables and deploy
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
-          export EMAIL_HOSTNAME=${{ secrets.EMAIL_HOST }}
-          export EMAIL_USERNAME=${{ secrets.EMAIL_USERNAME }}
-          export EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}
-          cd ci-cd
-          docker-compose -f docker-compose.yml pull -q
-          docker-compose -f docker-compose.yml up -d
-          EOF
+      - name: Deploy to Azure Web App for Containers
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          images: ${{ secrets.DOCKER_USERNAME }}/bsn-api:${{ needs.build-and-push-image.outputs.extract_version.outputs.VERSION }}
