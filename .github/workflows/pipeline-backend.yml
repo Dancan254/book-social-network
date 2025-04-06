@@ -12,7 +12,7 @@ on:
 
 jobs:
   build-and-push-image:
-    name: Build & Push Docker Image to DockerHub
+    name: Build & Push Docker Image to Azure Container Registry
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.extract_version.outputs.VERSION }}
@@ -36,11 +36,12 @@ jobs:
         run: |
           echo "VERSION=$(./mvnw -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_OUTPUT
 
-      - name: Login to DockerHub
+      - name: Login to Azure Container Registry
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: bsnregistryapp.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v4
@@ -49,7 +50,7 @@ jobs:
           file: Dockerfile
           push: true
           platforms: linux/amd64
-          tags: ${{ secrets.DOCKER_USERNAME }}/bsn-api:${{ steps.extract_version.outputs.VERSION }}
+          tags: bsnregistryapp.azurecr.io/bsn-api:${{ steps.extract_version.outputs.VERSION }}
 
   deploy-to-azure:
     name: Deploy to Azure App Service
@@ -63,4 +64,4 @@ jobs:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          images: ${{ secrets.DOCKER_USERNAME }}/bsn-api:${{ needs.build-and-push-image.outputs.version }}
+          images: bsnregistryapp.azurecr.io/bsn-api:${{ needs.build-and-push-image.outputs.version }}
