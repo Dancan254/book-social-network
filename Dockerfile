@@ -9,7 +9,7 @@ RUN mvn clean package -DskipTests
 #run stage
 FROM eclipse-temurin:21
 
-ARG PROFILE=dev
+ARG PROFILE=prod
 ARG APP_VERSION=1.0.0
 
 WORKDIR /app
@@ -17,15 +17,15 @@ WORKDIR /app
 COPY --from=build /build/target/book-social-network-*.jar /app/app.jar
 
 EXPOSE 8088
-
-ENV DB_URL=jdbc:postgresql://postgres:5432/book-social-network
-ENV ACTIVE_PROFILE=dev
-ENV DB_USERNAME=username
-ENV DB_PASSWORD=password
+# Set environment variables for database connection
+ENV DB_URL=${JDBC_URL}
+ENV ACTIVE_PROFILE=prod
+ENV DB_USERNAME=${JDBC_USERNAME}
+ENV DB_PASSWORD=${JDBC_PASSWORD}
 ENV JAR_VERSION=${APP_VERSION}
-ENV EMAIL_HOSTNAME=missing-email-hostname
-ENV EMAIL_USERNAME=missing-email-username
-ENV EMAIL_PASSWORD=missing-email-password
+ENV EMAIL_HOSTNAME=${MAIL_HOST}
+ENV EMAIL_USERNAME=${MAIL_USERNAME}
+ENV EMAIL_PASSWORD=${MAIL_PASSWORD}
 
 # Add wait-for-it script to ensure database is ready
 ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /wait-for-it.sh
