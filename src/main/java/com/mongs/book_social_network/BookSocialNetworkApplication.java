@@ -1,5 +1,7 @@
 package com.mongs.book_social_network;
 
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,4 +29,17 @@ public class BookSocialNetworkApplication {
 			}			
 		};
 	}
+
+//	@Value("${JDBC_URL}")
+//	private String jdbcUrl;
+//
+//	@Value("${MAIL_HOST}")
+//	private String mailHost;
+//
+//	@PostConstruct
+//	public void logProperties() {
+//		System.out.println("JDBC URL: " + jdbcUrl);
+//		System.out.println("Mail Host: " + mailHost);
+//	}
+
 }
