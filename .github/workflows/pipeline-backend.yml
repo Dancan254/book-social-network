@@ -14,6 +14,8 @@ jobs:
   build-and-push-image:
     name: Build & Push Docker Image to DockerHub
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract_version.outputs.VERSION }}
 
     steps:
       - name: Checkout code
@@ -61,4 +63,4 @@ jobs:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          images: ${{ secrets.DOCKER_USERNAME }}/bsn-api:${{ needs.build-and-push-image.outputs.extract_version.outputs.VERSION }}
+          images: ${{ secrets.DOCKER_USERNAME }}/bsn-api:${{ needs.build-and-push-image.outputs.version }}
