@@ -43,8 +43,8 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v4
         with:
-          context: book-social-network
-          file: book-social-network/Dockerfile
+          context: .
+          file: Dockerfile
           push: true
           platforms: linux/amd64
           tags: ${{ secrets.DOCKER_USERNAME }}/bsn-api:${{ steps.extract_version.outputs.VERSION }}
