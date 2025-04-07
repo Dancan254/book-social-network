@@ -41,5 +41,3 @@ application:
     activationUrl: http://localhost:5000/activate-account
   upload:
     photos-output-path: /uploads
-server:
-  port: 8088

@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: test
   servlet:
     multipart:
       max-file-size: 50MB
@@ -11,3 +11,8 @@ server:
   servlet:
     context-path: /api/v1
   port: 8088
+
+logging:
+  level:
+    root: info
+    org.springframework.web: debug

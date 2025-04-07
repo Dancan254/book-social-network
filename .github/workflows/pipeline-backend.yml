@@ -65,3 +65,11 @@ jobs:
           slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           images: bsnregistryapp.azurecr.io/bsn-api:${{ needs.build-and-push-image.outputs.version }}
+          app-settings: |
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            JDBC_URL=${{ secrets.JDBC_URL }}
+            JDBC_USERNAME=${{ secrets.JDBC_USERNAME }}
+            JDBC_PASSWORD=${{ secrets.JDBC_PASSWORD }}
+            MAIL_HOST=${{ secrets.MAIL_HOST }}
+            MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
+            MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
