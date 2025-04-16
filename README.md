@@ -126,8 +126,3 @@ src/main/java/com/mongs/book_social_network/
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- Spring Boot team for the excellent framework
-- All contributors who have helped shape this project 
